@@ -33,11 +33,7 @@ if __name__ == '__main__':
     # filename_Path = "E:\ezdrawing\9c3050eb8e3b335436437000b33a53e8.jpg"
     # filename = "9c3050eb8e3b335436437000b33a53e8"
     #
-    # save_Path1 = "E:\Save_Path_"
-    from utils.judge_file import judge
-
-    fileNames, save_Paths, img_filename_shape = judge();
-
+    # save_Path = "E:\Save_Path_\9c3050eb8e3b335436437000b33a53e8"
     # save_Path = os.path.join(save_Path1, filename)
     #
     # if not os.path.exists(save_Path1):
@@ -46,6 +42,14 @@ if __name__ == '__main__':
     # if not os.path.exists(save_Path):
     #     print("文件夹不存在,正在新建中");
     #     os.mkdir(save_Path);
+    #
+    # Get_Palette_by_Two_center(filename_Path, save_Path);
+
+
+    from utils.judge_file import judge
+
+    fileNames, save_Paths, img_filename_shape = judge();
+
     t1 = time.time();
     for i in range(img_filename_shape):
         print("第 %d 张照片 " % (i + 1));

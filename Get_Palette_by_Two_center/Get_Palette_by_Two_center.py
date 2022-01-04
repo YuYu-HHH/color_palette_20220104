@@ -40,7 +40,7 @@ def Get_Palette_by_Two_center(filename, save_Path):
         file_handle.write('\n')
     palette_ab = rgbs_2_abs(palette_rgb);
     draw(palette_ab,100,100,100,save_Path);
-    for i in range(6):
+    for i in range(7):
         print("555555555555555555555555555555555555555555")
         print(len(palette_rgb))
         print(len(weights))
@@ -295,6 +295,17 @@ def Get_Palette_(palette_rgb,weights,save_Path,num_I, t):
 
         vertices_image = get_bigger_palette_to_show(colors_new);
         save_Filename = os.path.join(save_Path, "666weights-Split_not-vertices.png");
+        cv2.imwrite(save_Filename, vertices_image);
+    if t == 6:
+        with open(save_Path +"\colors7.txt", 'a') as file_handle:
+            file_handle.write(str(colors_new))
+            file_handle.write('\n')
+        with open(save_Path +"\weights_new7.txt", 'a') as file_handle:
+            file_handle.write(str(weights_new_))
+            file_handle.write('\n')
+
+        vertices_image = get_bigger_palette_to_show(colors_new);
+        save_Filename = os.path.join(save_Path, "777weights-Split_not-vertices.png");
         cv2.imwrite(save_Filename, vertices_image);
     return colors_new,weights_new_;
 
