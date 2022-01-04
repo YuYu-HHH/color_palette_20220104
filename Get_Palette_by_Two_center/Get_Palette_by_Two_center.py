@@ -20,7 +20,7 @@ save_black_base = 0;
 def Get_Palette_by_Two_center(filename, save_Path):
     I = cv2.imread(filename, cv2.IMREAD_COLOR);
     I = I / 255;
-    k = 100;
+    k = 200;
     sigma = 40;
     discard_black = 1;
     h, w, c = I.shape;
@@ -152,8 +152,8 @@ def Get_Palette_(palette_rgb,weights,save_Path,num_I, t):
             weights_1.append(weight_1);
     elif len(palette_one) == 1:
         weights_1 = weights_1;
-    print(len(weights))
-    print(len(palette_rgb))
+    # print(len(weights))
+    # print(len(palette_rgb))
     for i in range(len(colors2)):
         colors = colors2[i];
         weight_2 = [];
@@ -162,7 +162,7 @@ def Get_Palette_(palette_rgb,weights,save_Path,num_I, t):
             for k in range(len(palette_rgb)):
                 if all(palette_rgb[k] == color):
                     index = k;
-            print(index)
+            # print(index)
             weight_2.append(weights[index]);
         weights_2.append(weight_2);
 
