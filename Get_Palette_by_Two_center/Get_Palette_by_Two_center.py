@@ -9,7 +9,7 @@ from Get_Palette_by_Two_center.Get_Tree_Root_New_Test import Get_Tree_Roots
 from Get_Palette_by_Two_center.Two_Center_Al import Colors
 from Get_Palette_by_Two_center.distance_util import distance_num
 from Get_Palette_by_Two_center.draw_figure import draw_figure, draw
-from Get_Palette_by_Two_center.space_2_space import rgb_2_ab, rgb_2_lab, rgbs_2_abs, rgb_2_lab_l
+from Get_Palette_by_Two_center.space_2_space import rgb_2_ab, rgb_2_lab, rgbs_2_abs, rgb_2_lab_l, rgb_2_hsv_v_colormath
 from get_the_picture_about_color.extract_theme import extract_theme
 from get_the_picture_about_color.rgblab import rgb2lab
 from show import get_bigger_palette_to_show,get_bigger_palette_to_show_One
@@ -50,11 +50,13 @@ def Get_Palette_by_Two_center(filename, save_Path):
 def Get_Palette_(palette_rgb,weights,save_Path,num_I, t):
     palette_ab = np.zeros([len(palette_rgb), 2]);
     palette_lab = np.zeros([len(palette_rgb), 3]);
-    palette_l = np.zeros([len(palette_rgb), 1]);
+    # palette_l = np.zeros([len(palette_rgb), 1]);
+    palette_v = np.zeros([len(palette_rgb),1]);
     for i in range(len(palette_rgb)):
         palette_ab[i] = rgb_2_ab(palette_rgb[i]);
         palette_lab[i] = rgb2lab(palette_rgb[i]);
-        palette_l[i] = rgb_2_lab_l(palette_rgb[i]);
+        # palette_l[i] = rgb_2_lab_l(palette_rgb[i]);
+        palette_v[i] = rgb_2_hsv_v_colormath(palette_rgb[i]);
 
     # 将palette按照L的大小分为  明暗  两部分。
 
@@ -65,12 +67,12 @@ def Get_Palette_(palette_rgb,weights,save_Path,num_I, t):
     palette_one_ab = [];
     palette_two_ab = [];
     for i in range(len(palette_rgb)):
-        if palette_l[i] < 28:
+        if palette_v[i] < 0.36:
             palette_one.append(palette_rgb[i])
             palette_one_lab.append(rgb_2_lab(palette_rgb[i]))
             palette_one_ab.append(rgb_2_ab(palette_rgb[i]));
 
-        elif palette_l[i] > 28:
+        elif palette_v[i] > 0.36:
             palette_two.append(palette_rgb[i]);
             palette_two_lab.append(rgb_2_lab(palette_rgb[i]));
             palette_two_ab.append(rgb_2_ab(palette_rgb[i]));
@@ -112,6 +114,7 @@ def Get_Palette_(palette_rgb,weights,save_Path,num_I, t):
             color = np.array(color)
             palettes_ab1 = rgbs_2_abs(color);
             draw(palettes_ab1, i, 0, t, save_Path);
+
             palette_img = get_bigger_palette_to_show(color)
             save_Filename = os.path.join(save_Path, str(t) + "picture_one_" + str(i) + "-vertices.png")
 
@@ -226,6 +229,10 @@ def Get_Palette_(palette_rgb,weights,save_Path,num_I, t):
             colors_new.append(colors[i]);
             weights_new_.append(weights_new[i]);
     colors_new = np.array(colors_new)
+    # print(colors_new.shape)
+
+    colors_new,weights_new_ = delete_similar_color(colors_new,weights_new_);
+    colors_new = np.array(colors_new)
     if t == 0:
         with open(save_Path + "\colors1.txt", 'a') as file_handle:
             file_handle.write(str(colors_new))
@@ -321,8 +328,34 @@ def Get_Palette_(palette_rgb,weights,save_Path,num_I, t):
 
 
 
+def delete_similar_color(colors,weights_new):
+    def dis_RGB(rgb1, rgb2):
+        rgb3 = rgb1 - rgb2;
+        if abs(rgb3[0]) + abs(rgb3[1]) + abs(rgb3[2]) < 30:
+            return 1;
+        else:
+            return 0;
 
+    colors_new = []
+    weights_new1 = [];
+    index_delete = [];
+    print(colors)
 
+    for i in range(len(colors)):
+        index = 0;
+        for j in range(i + 1, len(colors)):
+            if i != j:
+                if dis_RGB(colors[i], colors[j]) == 1:
+                    index = j;
+                    index_delete.append([i,j]);
+        if index == 0:
+            colors_new.append(colors[i]);
+            weights_new1.append(weights_new[i]);
+    colors = colors_new;
+    weights_new = weights_new1;
+    print("colorscolorscolorscolorscolorscolorscolorscolors")
+    print(colors)
+    return colors,weights_new;
 
 
 

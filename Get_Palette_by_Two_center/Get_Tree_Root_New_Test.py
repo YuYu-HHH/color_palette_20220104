@@ -238,59 +238,6 @@ def Get_Root_about_Tree(palettes_new_one,weight_new_one,palette_rgb_five):
             arg = np.argmax(weights_sorted_one);
             colors.append(palettes_sorted_one[arg]);
             weights_new.append(weights_sorted_one[arg]);
-        # for i in range(0, len(palettes_sorted_one) - 1, 2):
-        #     palette_one = palettes_sorted_one[i];
-        #     palette_two = palettes_sorted_one[i + 1];
-        #     weight_one = weights_sorted_one[i];
-        #     weight_two = weights_sorted_one[i + 1];
-        #     if palette_one in palette_rgb_five and palette_two in palette_rgb_five:
-        #         colors.append(palette_one);
-        #         colors.append(palette_two);
-        #         weights_new.append(weight_one);
-        #         weights_new.append(weight_two);
-        #     elif palette_one in palette_rgb_five and palette_two not in palette_rgb_five:
-        #
-        #         # palettes = [];
-        #         # palettes.append(palette_one);
-        #         # palettes.append(palette_two);
-        #         # weights_ = [];
-        #         # weights_.append(weight_one);
-        #         # weights_.append(weight_two);
-        #         # palettes = np.array(palettes);
-        #         # weights_ = np.array(weights_);
-        #         # color, weights__ = Get_Tree_root(palettes, weights_);
-        #         # colors.append(color);
-        #         # weights_new.append(weights__);
-        #         colors.append(palette_one);
-        #         weights_new.append(weight_one + weight_two);
-        #     elif palette_one not in palette_rgb_five and palette_two in palette_rgb_five:
-        #         colors.append(palette_two);
-        #         weights_new.append(weight_one + weight_two);
-        #     elif palette_one not in palette_rgb_five and palette_two not in palette_rgb_five:
-        #         if abs(weight_one - weight_two) < 1e4:
-        #             colors.append(palette_one);
-        #             colors.append(palette_two);
-        #             weights_new.append(weight_one);
-        #             weights_new.append(weight_two);
-        #         else:
-        #             if distance_ab(palette_one,palette_two) < 15:
-        #                 palettes = [];
-        #                 palettes.append(palette_one);
-        #                 palettes.append(palette_two);
-        #                 weights_ = [];
-        #                 weights_.append(weight_one);
-        #                 weights_.append(weight_two);
-        #                 palettes = np.array(palettes);
-        #                 weights_ = np.array(weights_);
-        #                 color, weights__ = Get_Tree_root(palettes, weights_);
-        #                 colors.append(color);
-        #                 weights_new.append(weights__);
-        #             else:
-        #                 colors.append(palette_one);
-        #                 colors.append(palette_two);
-        #                 weights_new.append(weight_one);
-        #                 weights_new.append(weight_two);
-
     else:
         colors.append(palettes_new_one[0]);
         weights_new.append(weight_new_one[0]);

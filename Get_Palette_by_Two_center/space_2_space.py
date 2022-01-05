@@ -171,7 +171,12 @@ def rgb_2_hsv_colormath(rgb):
     hs = [];
     hs.append(np.array([h,s,v]));
     return np.array(hs);
+def rgb_2_hsv_v_colormath(rgb):
+    RGB = sRGBColor(rgb[0], rgb[1], rgb[2], is_upscaled=True);
+    HSV = convert_color(RGB, HSVColor);
 
+    v = HSV.hsv_v;
+    return v
 
 
 

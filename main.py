@@ -29,37 +29,37 @@ if __name__ == '__main__':
 
     # filename_Path = "E:\DSC00907.JPG"
     # filename = "DSC00907"
+    filename_Path = os.path.join("E:\ezdrawing", "00c25473cfd79c9a425c62e606ec1828.jpg")
+    # filename_Path = "E:\ezdrawing"
+    filename = "00c25473cfd79c9a425c62e606ec1828"
 
-    # filename_Path = "E:\ezdrawing\9c3050eb8e3b335436437000b33a53e8.jpg"
-    # filename = "9c3050eb8e3b335436437000b33a53e8"
+    save_Path1 = "E:\Save_Path_"
+    save_Path = os.path.join(save_Path1, filename)
+
+    if not os.path.exists(save_Path):
+        print("文件夹不存在,正在新建中");
+        os.mkdir(save_Path1);
+    if not os.path.exists(save_Path):
+        print("文件夹不存在,正在新建中");
+        os.mkdir(save_Path);
+
+    Get_Palette_by_Two_center(filename_Path, save_Path);
+
+
+    # from utils.judge_file import judge
     #
-    # save_Path = "E:\Save_Path_\9c3050eb8e3b335436437000b33a53e8"
-    # save_Path = os.path.join(save_Path1, filename)
+    # fileNames, save_Paths, img_filename_shape = judge();
     #
-    # if not os.path.exists(save_Path1):
-    #     print("文件夹不存在,正在新建中");
-    #     os.mkdir(save_Path1);
-    # if not os.path.exists(save_Path):
-    #     print("文件夹不存在,正在新建中");
-    #     os.mkdir(save_Path);
+    # t1 = time.time();
+    # for i in range(img_filename_shape):
+    #     print("第 %d 张照片 " % (i + 1));
     #
-    # Get_Palette_by_Two_center(filename_Path, save_Path);
-
-
-    from utils.judge_file import judge
-
-    fileNames, save_Paths, img_filename_shape = judge();
-
-    t1 = time.time();
-    for i in range(img_filename_shape):
-        print("第 %d 张照片 " % (i + 1));
-
-        filename = fileNames[i];
-        save_Path = save_Paths[i];
-
-
-
-        Get_Palette_by_Two_center(filename, save_Path);
-    t2 = time.time();
+    #     filename = fileNames[i];
+    #     save_Path = save_Paths[i];
+    #
+    #
+    #
+    #     Get_Palette_by_Two_center(filename, save_Path);
+    # t2 = time.time();
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

@@ -19,7 +19,7 @@ def Broken_down_further_Get_Two_center(result_palette,result_weight):
                 dis_sum = dis + dis_sum;
     dis_sum = dis_sum / 2;
 
-    dis_base = dis_sum / len(palettes_not_sorted_hsv_x);
+    # dis_base = dis_sum / len(palettes_not_sorted_hsv_x);
 
     palettes_not_sorted_hsv_x_index = np.argsort(palettes_not_sorted_hsv_x);
     palettes_not_sorted_hsv_x_sort = palettes_not_sorted_hsv_x[palettes_not_sorted_hsv_x_index];
@@ -72,7 +72,7 @@ def Broken_down_further_by_Color_Depth(palettes,weights):
     indexs = [];
     for i in range(len(palettes)):
         v = hsvs_v[i];
-        if v < 0.35:
+        if v < 0.30:
             indexs.append(i);
     # for i in range(len(palettes)):
     #     v = hsvs_v[i];
@@ -95,7 +95,7 @@ def Broken_down_further_by_Color_Depth(palettes,weights):
     return palettes_one, palettes_two, weights_one, weights_two, return_num;
 
 def Broken_down_further_by_Color_Depth_LAB(palettes,weights):
-    hsvs = rgbs_2_hsvs(palettes);
+    hsvs = rgbs_2_hsvs_colormath(palettes);
     hsvs_v = hsvs[:,2];
     hsv_sort_index = np.argsort(hsvs_v);
     hsv_max_index = np.argmax(hsvs_v);
@@ -168,7 +168,7 @@ def Verify_color_group_distance_LAB(palettes,palettes_not_sorted):
     xs = np.zeros([len(palettes)]);
     ys = np.zeros([len(palettes)]);
     radiuss = np.zeros(len(palettes));
-    palettes_not_sorted_hsv = rgbs_2_hsvs(palettes_not_sorted)
+    palettes_not_sorted_hsv = rgbs_2_hsvs_colormath(palettes_not_sorted)
     for i in range(len(palettes)):
         palette = palettes[i];
         palette_lab = rgb_2_lab(palette);

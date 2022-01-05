@@ -5,7 +5,7 @@ from Get_palettes.Get_Split_further import Broken_down_further_by_Color_Depth, B
 import numpy as np
 import cv2
 
-from show import get_bigger_palette_to_show
+from show import get_bigger_palette_to_show,Get_Color
 
 
 def Get_Tree_Root(result_palettes, result_weights, palette_rgb_five,t):
@@ -18,26 +18,27 @@ def Get_Tree_Root(result_palettes, result_weights, palette_rgb_five,t):
 
         palettes1_one, palettes1_two, weights1_one, weights1_two, return1_num = Broken_down_further_by_Color_Depth(
             result_palette,result_weight);
-
-
-
         if return1_num == 1:
-
-            # palette_img = get_bigger_palette_to_show(palettes1_one)
-            # save_Filename = os.path.join("E:\Save_Path_\9c3050eb8e3b335436437000b33a53e8",
-            #                              str(t) + "pixel" + str(1) + "-vertices.png")
-            # cv2.imwrite(save_Filename, palette_img);
-            #
-            # palette_img = get_bigger_palette_to_show(palettes1_two)
-            # save_Filename = os.path.join("E:\Save_Path_\9c3050eb8e3b335436437000b33a53e8",
-            #                              str(t) + "pixel" + str(2) + "-vertices.png")
-            # cv2.imwrite(save_Filename, palette_img);
-
-
-            # colors1, weights_new1 = Get_Root_about_Tree(palettes1_one, weights1_one, palette_rgb_five);
-            # for i in range(len(colors1)):
-            #     colors.append(colors1[i]);
-            #     weights_new.append(weights_new1[i]);
+            if len(palettes1_one) > 0:
+                # if len(palettes1_one) == 1:
+                #     palettes1_one = np.array([palettes1_one])
+                save_Path = os.path.join("E:\Save_Path_", "00c25473cfd79c9a425c62e606ec1828");
+                palettes1_one = np.array(palettes1_one);
+                palette_img = get_bigger_palette_to_show(palettes1_one);
+                save_Filename = os.path.join(save_Path, str(t) + "pixels_one" + str(0) + "-vertices.png")
+                cv2.imwrite(save_Filename, palette_img);
+            if len(palettes1_two) > 0:
+                # if len(palettes1_two) == 1:
+                #     palettes1_two = np.array([palettes1_two])
+                palettes1_two = np.array(palettes1_two);
+                save_Path = os.path.join("E:\Save_Path_", "00c25473cfd79c9a425c62e606ec1828");
+                palette_img = get_bigger_palette_to_show(palettes1_two);
+                save_Filename = os.path.join(save_Path, str(t) + "pixels_two" + str(1) + "-vertices.png")
+                cv2.imwrite(save_Filename, palette_img);
+            colors1, weights_new1 = Get_Root_about_Tree(palettes1_one, weights1_one, palette_rgb_five);
+            for i in range(len(colors1)):
+                colors.append(colors1[i]);
+                weights_new.append(weights_new1[i]);
 
             if len(palettes1_two) > 0:
                 palettes1_two = np.array(palettes1_two);
@@ -47,6 +48,14 @@ def Get_Tree_Root(result_palettes, result_weights, palette_rgb_five,t):
                     colors.append(colors2[j]);
                     weights_new.append(weights_new2[j]);
         else:
+            if len(result_palette) > 0:
+                result_palette = np.array(result_palette)
+                print(result_palette.shape)
+                save_Path = os.path.join("E:\Save_Path_", "00c25473cfd79c9a425c62e606ec1828");
+                palette_img = get_bigger_palette_to_show(result_palette);
+                save_Filename = os.path.join(save_Path, str(t) + "result_palette" + str(0) + "-vertices.png")
+                cv2.imwrite(save_Filename, palette_img);
+
             colors1, weights_new1 = Get_Root_about_Tree(result_palette, result_weight, palette_rgb_five);
             for i in range(len(colors1)):
                 colors.append(colors1[i]);
