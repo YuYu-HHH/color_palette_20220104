@@ -5,9 +5,12 @@ a = np.array([ 26  ,22,  36]);
 b = np.array( [ 47  ,45 , 43]);
 c = np.array( [107 ,102 , 88]);
 # b = rgb2lab(a)
-a1 = rgb_2_hsv_colormath(a)
-b1 = rgb_2_hsv_colormath(b);
-c1 = rgb_2_hsv_colormath(c);
-print(a1)
-print(b1)
-print(c1)
+# a1 = rgb_2_hsv_colormath(a)
+# b1 = rgb_2_hsv_colormath(b);
+# c1 = rgb_2_hsv_colormath(c);
+# print(a1)
+# print(b1)
+# print(c1)
+d = np.array([a,b,c]);
+e = np.sum(d,axis=0) / len(d)
+print(e)

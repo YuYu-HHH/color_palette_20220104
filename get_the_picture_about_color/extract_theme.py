@@ -41,26 +41,26 @@ def extract_theme(I,k,sigma,discard_black):
 
     [a,C,b] = fkmeans(X,cinits,weights);
 
-    C = lab2rgb_matrix(C);
-    C = np.transpose(C);
-    C_new = [];
+    X = lab2rgb_matrix(X);
+    X = np.transpose(X);
+    X_new = [];
     k = 0;
-    for i in range(C.shape[0]):
-        CC = C[i,:];
+    for i in range(X.shape[0]):
+        CC = X[i,:];
         if CC.all() == 0:
             continue;
         else:
             k = k + 1;
-            C_new.append(C[i,:]);
+            X_new.append(X[i,:]);
     X = lab2rgb_matrix(X);
     X = np.transpose(X);
     print("=====================")
     print(X.shape)
     print(weights.shape)
 
-    C_new = np.array(C_new);
+    X_new = np.array(X_new);
     weights = weights[0:k];
-    return X , weights;
+    return X_new , weights;
 
 
 

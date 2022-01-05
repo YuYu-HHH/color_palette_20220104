@@ -18,8 +18,8 @@ def judge():
     # save_Path1 = "H:\Save_Path"
     # filename = "H:\yishutu_biaozhun\enwu.png"
     # filename1 = "enwu.png"
-    save_Path1 = "E:\Save_Path_"
-    dir = "E:\ezdrawing"
+    save_Path1 = "E:\Save_Path_yishutu"
+    dir = "E:\yishutu_biaozhun"
     fileNames, img_filenames = get_filenames(dir);
     save_Paths = [];
     # 文件夹中图片的数量

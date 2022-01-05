@@ -1,13 +1,17 @@
 from PIL import Image
 
-from Get_Palette_by_Two_center.distance_util import distance_ab
+from Get_Palette_by_Two_center.distance_util import distance_ab, distance_num
 from Get_palettes.Get_Split_further import Broken_down_further_Get_Two_center, Broken_down_further_by_Color_Depth
 from Get_palettes.Get_Tree_root import Get_Tree_root
 from Get_palettes.Save_ import get_bigger_palette_to_show
-from Get_Palette_by_Two_center.space_2_space import rgbs_2_hsvs_colormath, rgb_2_hsv_colormath
+from Get_Palette_by_Two_center.space_2_space import rgbs_2_hsvs_colormath, rgb_2_hsv_colormath, rgb_2_ab, rgbs_2_abs, \
+    rgbs_2_labs
+from get_the_picture_about_color.rgblab import lab2rgb
 from palette_sorter.color_palette import ColorPalette
 from palette_sorter.comprehensive_single_palette_sorter import ComprehensiveSinglePaletteSorter
 import numpy as np
+import cv2
+
 
 
 def Get_Tree_Roots(result_palettes, result_weights, palette_rgb_five,k):
@@ -109,7 +113,7 @@ def Get_Tree_Roots1(result_palettes, result_weights, palette_rgb_five, len_index
     for i in range(len_index):
         result_palette = result_palettes[i];
         result_weight = result_weights[i];
-        result_palette_hsv = rgbs_2_hsvs(result_palette);
+        result_palette_hsv = rgbs_2_hsvs_colormath(result_palette);
 
         vertices_image = get_bigger_palette_to_show(result_palette);
         Image.fromarray((vertices_image).round().astype(np.uint8)).save(
@@ -223,6 +227,8 @@ def Get_Root_about_Tree(palettes_new_one,weight_new_one,palette_rgb_five):
         palettes_sorted_one = palettes_new_one[standard_sorted_indices];
         weights_sorted_one = weight_new_one[standard_sorted_indices];
         base_ = 0;
+        colors_new1 = [];
+        weights_new1 = [];
         for i in range(len(palettes_sorted_one)):
             palette_one = palettes_sorted_one[i];
             weight_one = weights_sorted_one[i];
@@ -234,6 +240,36 @@ def Get_Root_about_Tree(palettes_new_one,weight_new_one,palette_rgb_five):
                 colors.append(palette_one);
                 weights_new.append(weight_one);
                 base_ = 1;
+        if base_ == 1:
+            palette_ab = rgbs_2_abs(colors);
+            palette_lab = rgbs_2_labs(colors);
+            if len(colors) > 1:
+                (x2, y2), radius2 = cv2.minEnclosingCircle(palette_ab);
+                if radius2 < 8:
+                    colors_new1.append(lab2rgb(np.sum(palette_lab,axis=0) / len(palette_lab)));
+                    weights_new1.append(np.sum(weights_new));
+
+                else:
+                    pixels_one,pixels_two,pixels_one_ab,pixels_two_ab,weights_one,weights_two = Get_Two_Center(colors,weights_new);
+                    if len(pixels_one_ab) > 1:
+                        (x2, y2), radius2 = cv2.minEnclosingCircle(pixels_one_ab);
+                        palette_one_lab = rgbs_2_labs(pixels_one);
+                        if radius2 < 8:
+                            colors_new1.append(lab2rgb(np.sum(palette_one_lab, axis=0) / len(palette_one_lab)));
+                            weights_new1.append(np.sum(weights_one));
+                    elif len(pixels_one_ab) == 1:
+                        colors_new1.append(pixels_one);
+                        weights_new1.append(weights_one);
+
+                    if len(pixels_two_ab) > 1:
+                        (x2, y2), radius2 = cv2.minEnclosingCircle(pixels_two_ab);
+                        palette_one_lab = rgbs_2_labs(pixels_two);
+                        if radius2 < 8:
+                            colors_new1.append(lab2rgb(np.sum(palette_one_lab, axis=0) / len(palette_one_lab)));
+                            weights_new1.append(np.sum(weights_two));
+                    elif len(pixels_two_ab) == 1:
+                        colors_new1.append(pixels_two);
+                        weights_new1.append(weights_two);
         if base_ == 0:
             arg = np.argmax(weights_sorted_one);
             colors.append(palettes_sorted_one[arg]);
@@ -242,3 +278,73 @@ def Get_Root_about_Tree(palettes_new_one,weight_new_one,palette_rgb_five):
         colors.append(palettes_new_one[0]);
         weights_new.append(weight_new_one[0]);
     return colors, weights_new;
+
+
+
+def Get_Two_Center(palettes,weights):
+    # print(palettes)
+    dis_base = 0;
+    index_base = np.zeros(2);
+    # 1.先找出来两个距离最远的点
+    #
+    # print("---------------------------------------")
+    for i in range(len(palettes)):
+        for j in range(len(palettes)):
+            dis = distance_num(rgb_2_ab(palettes[i]), rgb_2_ab(palettes[j]));
+            # print(dis)
+            # print(dis_base)
+            if dis > dis_base:
+                index_base = [i, j];
+                dis_base = dis;
+
+        # 2.分成两个中心
+        # print(index_base)
+        # print(palettes)
+    center_two_one = palettes[int(index_base[0])];
+    center_two_two = palettes[int(index_base[1])];
+    weights_one = weights[int(index_base[0])];
+    weights_two = weights[int(index_base[1])];
+    center_two_one_ab = rgb_2_ab(center_two_one);
+    center_two_two_ab = rgb_2_ab(center_two_two);
+
+    labels = np.zeros([len(palettes)]);
+
+    pixels_one_ab = [];
+    pixels_two_ab = [];
+    pixels_one = [];
+    pixels_two = [];
+    for i in range(len(palettes)):
+        palette = palettes[i];
+        weight = weights[i]
+        palette_ab = rgb_2_ab(palette);
+
+        dis_one = distance_num(palette_ab, center_two_one_ab);
+        dis_two = distance_num(palette_ab, center_two_two_ab);
+
+        if dis_one < dis_two:
+            labels[i] = 0;
+            pixels_one_ab.append(palette_ab);
+            pixels_one.append(palette);
+            weights_one.append(weight)
+
+            # 将中心更换为圆心
+            palettes_ab1 = np.array(pixels_one_ab, np.float32);
+            (x1, y1), radius1 = cv2.minEnclosingCircle(palettes_ab1);
+            center_two_one_ab = np.array([x1, y1]);
+
+
+        elif dis_one > dis_two:
+            labels[i] = 1;
+            pixels_two_ab.append(palette_ab);
+            pixels_two.append(palette)
+            weights_two.append(weight)
+            palettes_ab2 = np.array(pixels_two_ab, np.float32);
+            (x2, y2), radius2 = cv2.minEnclosingCircle(palettes_ab2);
+            center_two_two_ab = np.array([x2, y2]);
+        # elif dis_one == dis_two:
+        #     pixels_one_ab.append(palette_ab);
+        #     pixels_one.append(palette);
+        #     pixels_two_ab.append(palette_ab);
+        #     pixels_two.append(palette);
+
+    return pixels_one,pixels_two,pixels_one_ab,pixels_two_ab,weights_one,weights_two;

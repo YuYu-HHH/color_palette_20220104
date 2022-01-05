@@ -1,5 +1,4 @@
 import cv2
-
 from Get_Palette_by_Two_center.distance_util import distance_num
 import numpy as np
 
@@ -21,35 +20,27 @@ class Colors:
         if yes == 1:
             self.colors.append(palettes);
         elif yes == 0:
-                pixels_one, pixels_two, pixels_one_ab, pixels_two_ab = self.Get_Two_Center(palettes);
-                xy1, xy2, yes = self.Verify_color_group_by_distance_LAB(pixels_one_ab, pixels_two_ab);
+            # print("=====================================")
+            # print(palettes)
+            pixels_one, pixels_two, pixels_one_ab, pixels_two_ab = self.Get_Two_Center(palettes);
+            xy1, xy2, yes = self.Verify_color_group_by_distance_LAB(pixels_one_ab, pixels_two_ab);
+            if len(pixels_one) == 1:
+                self.two_center_one(pixels_one, 1);
+                self.two_center_one(pixels_two, yes);
+            if len(pixels_two) == 1:
+                self.two_center_one(pixels_one, yes);
+                self.two_center_one(pixels_two, 1);
+            if len(pixels_one) != 1 and len(pixels_two) != 1:
                 self.two_center_one(pixels_one, yes);
                 self.two_center_one(pixels_two, yes);
 
                 # print(yes)
 
-    def two_center_Al(self,palettes):
-        pixels_one,pixels_two,pixels_one_ab,pixels_two_ab = self.Get_Two_Center(palettes);
-        # print(pixels_one_ab)
-        # print(pixels_two_ab)
-        xy1,xy2,yes = self.Verify_color_group_by_distance_LAB(pixels_one_ab,pixels_two_ab);
-        # print(yes)
 
-        colors = [];
-
-
-        if yes == 0:
-            yes1 = 0;
-            yes2 = 0;
-            while  yes1 == 0:
-                self.Get_info(pixels_one);
-            while yes2 == 0:
-                self.Get_info(pixels_two);
 
 
     def Get_info(self,pixel):
         pixels_one, pixels_two, pixels_one_ab, pixels_two_ab = self.Get_Two_Center(pixel);
-        # xy1, xy2, yes1 = self.Verify_color_group_by_distance_LAB(pixels_one_ab, pixels_two_ab);
         return pixels_one, pixels_two;
 
     def Get_Two_Center(self,palettes):
@@ -57,7 +48,7 @@ class Colors:
         dis_base = 0;
         index_base = np.zeros(2);
         # 1.先找出来两个距离最远的点
-        print("---------------------------------------")
+        # print("---------------------------------------")
         for i in range(len(palettes)):
             for j in range(len(palettes)):
 
@@ -101,7 +92,7 @@ class Colors:
                 center_two_one_ab = np.array([x1, y1]);
 
 
-            elif dis_two < dis_one:
+            elif dis_one > dis_two:
                 labels[i] = 1;
                 pixels_two_ab.append(palette_ab);
                 pixels_two.append(palette)
@@ -115,13 +106,6 @@ class Colors:
             #     pixels_two_ab.append(palette_ab);
             #     pixels_two.append(palette);
 
-
-
-
-
-
-
-
         return pixels_one,pixels_two,pixels_one_ab,pixels_two_ab;
 
     def Verify_color_group_by_distance_LAB(self,palettes_ab1,palettes_ab2):
@@ -133,7 +117,7 @@ class Colors:
         # radiuss1 = np.zeros(len(palettes_ab1));
 
         palettes_ab1 = np.array(palettes_ab1, np.float32);
-        print(palettes_ab1)
+        # print(palettes_ab1)
         (x1, y1), radius1 = cv2.minEnclosingCircle(palettes_ab1);
         xy1 = np.array([x1,y1])
         # 画出来直观图
@@ -153,11 +137,13 @@ class Colors:
 
 
         if distance_num(xy1,xy2) < (radius1 + radius2 ):
+
             # print("两个圆间距短，需要进一步分");
             yes = 0;
         else:
             # print("两个圆间距长，不用分了")
             yes = 1;
+
         #画出来直观图
         # draw_entire_figure(palettes_not_sorted_hsv,xs,ys,radiuss);
         # print(xy);

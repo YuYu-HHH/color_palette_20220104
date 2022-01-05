@@ -44,7 +44,11 @@ def Get_Palette_by_Two_center(filename, save_Path):
         print("555555555555555555555555555555555555555555")
         print(len(palette_rgb))
         print(len(weights))
-        palette_rgb, weights = Get_Palette_(palette_rgb,weights,save_Path,num_I, i);
+        # palette_rgb, weights = Get_Palette_(palette_rgb,weights,save_Path,num_I, i);
+        if len(palette_rgb) > 8:
+            palette_rgb, weights = Get_Palette_(palette_rgb,weights,save_Path,num_I, i);
+        if len(palette_rgb) < 5:
+            break;
 
 
 def Get_Palette_(palette_rgb,weights,save_Path,num_I, t):
