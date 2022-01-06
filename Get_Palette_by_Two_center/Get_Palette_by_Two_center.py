@@ -45,13 +45,18 @@ def Get_Palette_by_Two_center(filename, save_Path):
         print(len(palette_rgb))
         print(len(weights))
         # palette_rgb, weights = Get_Palette_(palette_rgb,weights,save_Path,num_I, i);
-        if len(palette_rgb) > 8:
-            palette_rgb, weights = Get_Palette_(palette_rgb,weights,save_Path,num_I, i);
-        if len(palette_rgb) < 5:
+        # if len(palette_rgb) > 8:
+        #     palette_rgb, weights = Get_Palette_(palette_rgb,weights,save_Path,num_I, i);
+        if len(palette_rgb) < 15:
+            ok = 1;
+        else:
+            ok = 0;
+        palette_rgb, weights = Get_Palette_(palette_rgb, weights, save_Path, num_I, i,ok);
+        if len(palette_rgb) < 6:
             break;
 
 
-def Get_Palette_(palette_rgb,weights,save_Path,num_I, t):
+def Get_Palette_(palette_rgb,weights,save_Path,num_I, t,ok):
     palette_ab = np.zeros([len(palette_rgb), 2]);
     palette_lab = np.zeros([len(palette_rgb), 3]);
     # palette_l = np.zeros([len(palette_rgb), 1]);
@@ -97,13 +102,13 @@ def Get_Palette_(palette_rgb,weights,save_Path,num_I, t):
     # draw_Color_Group(palette_ab);
     if len(palette_one) > 1:
         colorss = Colors();
-        colors1 = colorss.two_center(palette_one);
+        colors1 = colorss.two_center(palette_one,ok);
     else:
         colors1 = palette_one;
 
     colors1 = np.array(colors1);
     colorss1 = Colors();
-    colors2 = colorss1.two_center(palette_two);
+    colors2 = colorss1.two_center(palette_two,ok);
     colors2 = np.array(colors2);
 
     # 去除 明亮中的黑暗的颜色 因为自己的代码中写的全局变量， 会一直添加，所以需要删除
@@ -335,10 +340,51 @@ def Get_Palette_(palette_rgb,weights,save_Path,num_I, t):
 def delete_similar_color(colors,weights_new):
     def dis_RGB(rgb1, rgb2):
         rgb3 = rgb1 - rgb2;
-        if abs(rgb3[0]) + abs(rgb3[1]) + abs(rgb3[2]) < 30:
-            return 1;
-        else:
-            return 0;
+        if abs(rgb3[0]) < 10 and abs(rgb3[1]) < 10:
+            if abs(rgb3[2]) < 50:
+                return 1;
+            else:
+                return 0;
+        elif abs(rgb3[0]) < 10 and abs(rgb3[2]) < 10:
+            if abs(rgb3[1]) < 50:
+                return 1;
+            else:
+                return 0;
+        elif abs(rgb3[1]) < 10 and abs(rgb3[2]) < 10:
+            if abs(rgb3[0]) < 50:
+                return 1;
+            else:
+                return 0;
+        elif abs(rgb3[0]) < 5 and abs(rgb3[1]) < 20:
+            if abs(rgb3[2]) < 30:
+                return 1;
+            else:
+                return 0;
+        elif abs(rgb3[0]) < 20 and abs(rgb3[1]) < 5:
+            if abs(rgb3[2]) < 30:
+                return 1;
+            else:
+                return 0;
+        elif abs(rgb3[0]) < 5 and abs(rgb3[2]) < 20:
+            if abs(rgb3[1]) < 30:
+                return 1;
+            else:
+                return 0;
+        elif abs(rgb3[0]) < 20 and abs(rgb3[2]) < 5:
+            if abs(rgb3[1]) < 30:
+                return 1;
+            else:
+                return 0;
+        elif abs(rgb3[1]) < 5 and abs(rgb3[2]) < 20:
+            if abs(rgb3[0]) < 30:
+                return 1;
+            else:
+                return 0;
+        elif abs(rgb3[1]) < 20 and abs(rgb3[2]) < 5:
+            if abs(rgb3[0]) < 30:
+                return 1;
+            else:
+                return 0;
 
     colors_new = []
     weights_new1 = [];

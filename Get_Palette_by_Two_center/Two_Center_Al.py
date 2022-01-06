@@ -9,12 +9,12 @@ class Colors:
     def __init__(self):
         self.colors = [];
 
-    def two_center(self,palettes):
+    def two_center(self,palettes,ok):
         yes = 0;
-        self.two_center_one(palettes, yes);
+        self.two_center_one(palettes, yes,ok);
         return self.colors;
 
-    def two_center_one(self ,palettes,yes):
+    def two_center_one(self ,palettes,yes,ok):
         if len(palettes) > 8:
             yes = 0;
         if yes == 1:
@@ -24,15 +24,41 @@ class Colors:
             # print(palettes)
             pixels_one, pixels_two, pixels_one_ab, pixels_two_ab = self.Get_Two_Center(palettes);
             xy1, xy2, yes = self.Verify_color_group_by_distance_LAB(pixels_one_ab, pixels_two_ab);
-            if len(pixels_one) == 1:
-                self.two_center_one(pixels_one, 1);
-                self.two_center_one(pixels_two, yes);
-            if len(pixels_two) == 1:
-                self.two_center_one(pixels_one, yes);
-                self.two_center_one(pixels_two, 1);
-            if len(pixels_one) != 1 and len(pixels_two) != 1:
-                self.two_center_one(pixels_one, yes);
-                self.two_center_one(pixels_two, yes);
+
+            if ok == 1:
+                pixels_one_ab = np.array(pixels_one_ab, np.float32);
+                # print(palettes_ab1)
+                (x1, y1), radius1 = cv2.minEnclosingCircle(pixels_one_ab);
+                if radius1 < 5:
+                    self.two_center_one(pixels_one, 1, ok);
+                else:
+                    self.two_center_one(pixels_one, 0, ok);
+                pixels_two_ab = np.array(pixels_two_ab, np.float32);
+                # print(palettes_ab1)
+                (x1, y1), radius1 = cv2.minEnclosingCircle(pixels_two_ab);
+                if radius1 < 5:
+                    self.two_center_one(pixels_two, 1, ok);
+                else:
+                    self.two_center_one(pixels_two, 0, ok);
+                if len(pixels_one) == 1:
+                    self.two_center_one(pixels_one, 1,ok);
+                    self.two_center_one(pixels_two, yes,ok);
+                if len(pixels_two) == 1:
+                    self.two_center_one(pixels_one, yes,ok);
+                    self.two_center_one(pixels_two, 1,ok);
+                if len(pixels_one) != 1 and len(pixels_two) != 1:
+                    self.two_center_one(pixels_one, yes,ok);
+                    self.two_center_one(pixels_two, yes,ok);
+            else:
+                if len(pixels_one) == 1:
+                    self.two_center_one(pixels_one, 1,ok);
+                    self.two_center_one(pixels_two, yes,ok);
+                if len(pixels_two) == 1:
+                    self.two_center_one(pixels_one, yes,ok);
+                    self.two_center_one(pixels_two, 1,ok);
+                if len(pixels_one) != 1 and len(pixels_two) != 1:
+                    self.two_center_one(pixels_one, yes,ok);
+                    self.two_center_one(pixels_two, yes,ok);
 
                 # print(yes)
 
