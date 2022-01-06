@@ -52,8 +52,8 @@ if __name__ == '__main__':
 
     t1 = time.time();
     for i in range(img_filename_shape):
-        print("第 %d 张照片 " % (i + 1));
-
+        print("第 %d 张图片 " % (i + 1));
+        print("图片名称为：",fileNames[i])
         filename = fileNames[i];
         save_Path = save_Paths[i];
 

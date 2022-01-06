@@ -243,7 +243,11 @@ def Get_Root_about_Tree(palettes_new_one,weight_new_one,palette_rgb_five):
         if base_ == 1:
             palette_ab = rgbs_2_abs(colors);
             palette_lab = rgbs_2_labs(colors);
+            print(palette_ab)
+            print(colors)
+            palette_ab = np.array(palette_ab)
             if len(colors) > 1:
+                palette_ab = np.array(palette_ab, np.float32);
                 (x2, y2), radius2 = cv2.minEnclosingCircle(palette_ab);
                 if radius2 < 8:
                     colors_new1.append(lab2rgb(np.sum(palette_lab,axis=0) / len(palette_lab)));
@@ -252,6 +256,7 @@ def Get_Root_about_Tree(palettes_new_one,weight_new_one,palette_rgb_five):
                 else:
                     pixels_one,pixels_two,pixels_one_ab,pixels_two_ab,weights_one,weights_two = Get_Two_Center(colors,weights_new);
                     if len(pixels_one_ab) > 1:
+                        pixels_one_ab = np.array(pixels_one_ab, np.float32);
                         (x2, y2), radius2 = cv2.minEnclosingCircle(pixels_one_ab);
                         palette_one_lab = rgbs_2_labs(pixels_one);
                         if radius2 < 8:
@@ -262,6 +267,7 @@ def Get_Root_about_Tree(palettes_new_one,weight_new_one,palette_rgb_five):
                         weights_new1.append(weights_one);
 
                     if len(pixels_two_ab) > 1:
+                        pixels_two_ab = np.array(pixels_two_ab, np.float32);
                         (x2, y2), radius2 = cv2.minEnclosingCircle(pixels_two_ab);
                         palette_one_lab = rgbs_2_labs(pixels_two);
                         if radius2 < 8:
@@ -302,8 +308,8 @@ def Get_Two_Center(palettes,weights):
         # print(palettes)
     center_two_one = palettes[int(index_base[0])];
     center_two_two = palettes[int(index_base[1])];
-    weights_one = weights[int(index_base[0])];
-    weights_two = weights[int(index_base[1])];
+    # weights_one = weights[int(index_base[0])];
+    # weights_two = weights[int(index_base[1])];
     center_two_one_ab = rgb_2_ab(center_two_one);
     center_two_two_ab = rgb_2_ab(center_two_two);
 
@@ -313,6 +319,8 @@ def Get_Two_Center(palettes,weights):
     pixels_two_ab = [];
     pixels_one = [];
     pixels_two = [];
+    weights_one = [];
+    weights_two = [];
     for i in range(len(palettes)):
         palette = palettes[i];
         weight = weights[i]
